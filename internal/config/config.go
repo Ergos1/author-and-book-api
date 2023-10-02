@@ -39,7 +39,7 @@ func NewConfig() *Config {
 			Dbname:   getEnv("POSTGRES_DBNAME", "postgres"),
 		},
 		Server: ServerConfig{
-			Port: getEnvAsInt("SERVER_PORT", 9000),
+			Address: getEnv("SERVER_ADDRESS", ":9000"),
 		},
 	}
 }

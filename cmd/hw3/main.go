@@ -2,11 +2,12 @@ package main
 
 import (
 	"context"
-	"fmt"
+	"log"
 	"os"
 	"os/signal"
 
 	"gitlab.ozon.dev/ergossteam/homework-3/internal/config"
+	"gitlab.ozon.dev/ergossteam/homework-3/internal/transport/http"
 )
 
 func main() {
@@ -22,7 +23,11 @@ func run(ctx context.Context) error {
 	defer cancels()
 
 	cfg := config.NewConfig()
-	fmt.Println(cfg)
+	srv := http.NewServer(ctx, http.WithAddress(cfg.Server.Address))
+
+	if err := srv.Run(); err != nil {
+		log.Printf("[MAIN] Error: %v", err)
+	}
 
 	return nil
 }

@@ -20,7 +20,7 @@ type PostgresConfig struct {
 }
 
 type ServerConfig struct {
-	Port int
+	Address string
 }
 
 type Config struct {
