@@ -10,6 +10,10 @@ import (
 	"gitlab.ozon.dev/ergossteam/homework-3/internal/transport/http"
 )
 
+type Server interface {
+	Run() error
+}
+
 func main() {
 	ctx := context.Background()
 
@@ -23,7 +27,7 @@ func run(ctx context.Context) error {
 	defer cancels()
 
 	cfg := config.NewConfig()
-	srv := http.NewServer(ctx, http.WithAddress(cfg.Server.Address))
+	var srv Server = http.NewServer(ctx, http.WithAddress(cfg.Server.Address))
 
 	if err := srv.Run(); err != nil {
 		log.Printf("[MAIN] Error: %v", err)
