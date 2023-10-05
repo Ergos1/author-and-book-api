@@ -32,11 +32,11 @@ func getEnvAsInt(key string, defaultVal int) int {
 func NewConfig() *Config {
 	return &Config{
 		Database: PostgresConfig{
-			User:     getEnv("POSTGRES_USER", "postgres"),
-			Password: getEnv("POSTGRES_PASSWORD", "postgres"),
+			User:     getEnv("POSTGRES_USER", "test"),
+			Password: getEnv("POSTGRES_PASSWORD", "test"),
 			Host:     getEnv("POSTGRES_HOST", "localhost"),
-			Port:     getEnvAsInt("POSTGRES_PORT", 5432),
-			Dbname:   getEnv("POSTGRES_DBNAME", "postgres"),
+			Port:     getEnvAsInt("POSTGRES_PORT", 5433),
+			Dbname:   getEnv("POSTGRES_DB", "test"),
 		},
 		Server: ServerConfig{
 			Address: getEnv("SERVER_ADDRESS", ":9000"),
