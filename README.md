@@ -9,6 +9,20 @@
 
 ``make migration-up``
 
+.env пример:
+
+POSTGRES_DB=test
+
+POSTGRES_USER=test
+
+POSTGRES_PASSWORD=test
+
+POSTGRES_PORT=5433
+
+POSTGRES_HOST=localhost
+
+SERVER_ADDRESS=:9000
+
 ## Пример:
 Создать автора:
 
