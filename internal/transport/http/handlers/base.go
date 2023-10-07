@@ -7,11 +7,6 @@ import (
 	"github.com/go-chi/render"
 )
 
-type Response struct {
-	Status int      `json:"status"`
-	Data   struct{} `json:"data"`
-}
-
 type BaseHandler struct {
 }
 
@@ -28,5 +23,6 @@ func (ah *BaseHandler) Routes() chi.Router {
 }
 
 func (h *BaseHandler) Check(w http.ResponseWriter, r *http.Request) {
-	render.JSON(w, r, Response{Status: 200})
+	render.Status(r, http.StatusOK)
+	render.JSON(w, r, Response{Data: "ok"})
 }

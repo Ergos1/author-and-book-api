@@ -3,6 +3,7 @@ package psql
 import (
 	"context"
 
+	exDB "gitlab.ozon.dev/ergossteam/homework-3/internal/db"
 	"gitlab.ozon.dev/ergossteam/homework-3/internal/infrastructure/db/psql"
 )
 
@@ -27,10 +28,18 @@ func (db *DB) Connect(ctx context.Context, uri string) error {
 
 func (db *DB) Close(ctx context.Context) error {
 	if db.database == nil {
-		return ErrDatabaseAlreadyClosed
+		return exDB.ErrDatabaseAlreadyClosed
 	}
 
 	db.database.GetPool(ctx).Close()
 	db.database = nil
 	return nil
+}
+
+func (db *DB) Authors() exDB.AuthorRepo {
+	return NewAuthorRepo(db.database)
+}
+
+func (db *DB) Books() exDB.BookRepo {
+	return NewBookRepo(db.database)
 }

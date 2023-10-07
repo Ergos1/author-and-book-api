@@ -29,7 +29,7 @@ func (br *BookRepo) GetById(ctx context.Context, id int64) (*models.Book, error)
 	var book models.Book
 	err := br.db.Get(ctx, &book, "SELECT id, name, rating, author_id FROM books WHERE id=$1", id)
 	if err == sql.ErrNoRows {
-		return nil, ErrObjectNotFound
+		return nil, db.ErrObjectNotFound
 	}
 
 	return &book, nil
