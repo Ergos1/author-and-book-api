@@ -4,8 +4,8 @@ import (
 	"context"
 
 	"gitlab.ozon.dev/ergossteam/homework-3/internal/db"
+	pkg_psql "gitlab.ozon.dev/ergossteam/homework-3/internal/infrastructure/db/psql"
 	"gitlab.ozon.dev/ergossteam/homework-3/internal/models"
-	pkg_psql "gitlab.ozon.dev/ergossteam/homework-3/pkg/db/psql"
 )
 
 type AuthorRepo struct {

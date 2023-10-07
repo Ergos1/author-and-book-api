@@ -4,8 +4,8 @@ import (
 	"context"
 
 	"gitlab.ozon.dev/ergossteam/homework-3/internal/db"
+	"gitlab.ozon.dev/ergossteam/homework-3/internal/infrastructure/db/psql"
 	"gitlab.ozon.dev/ergossteam/homework-3/internal/models"
-	"gitlab.ozon.dev/ergossteam/homework-3/pkg/db/psql"
 )
 
 type BookRepo struct {

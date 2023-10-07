@@ -3,7 +3,7 @@ package psql
 import (
 	"context"
 
-	"gitlab.ozon.dev/ergossteam/homework-3/pkg/db/psql"
+	"gitlab.ozon.dev/ergossteam/homework-3/internal/infrastructure/db/psql"
 )
 
 type DB struct {
