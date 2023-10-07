@@ -4,16 +4,20 @@ import (
 	"context"
 	"log"
 	"net/http"
+
+	"github.com/go-chi/chi"
 )
 
 type Server struct {
 	Address string
+	Handler chi.Router
 	ctx     context.Context
 }
 
 func NewServer(ctx context.Context, opts ...ServerOption) *Server {
 	srv := &Server{
-		ctx: ctx,
+		ctx:     ctx,
+		Handler: chi.NewRouter(),
 	}
 
 	for _, opt := range opts {
@@ -23,16 +27,10 @@ func NewServer(ctx context.Context, opts ...ServerOption) *Server {
 	return srv
 }
 
-func (s *Server) basicHandler() http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		log.Print("HI")
-	})
-}
-
 func (s *Server) Run() error {
 	srv := &http.Server{
 		Addr:    s.Address,
-		Handler: s.basicHandler(),
+		Handler: s.Handler,
 	}
 
 	go s.Stop(srv)

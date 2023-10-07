@@ -9,6 +9,7 @@ import (
 	"gitlab.ozon.dev/ergossteam/homework-3/internal/config"
 	"gitlab.ozon.dev/ergossteam/homework-3/internal/db/psql"
 	"gitlab.ozon.dev/ergossteam/homework-3/internal/transport/http"
+	"gitlab.ozon.dev/ergossteam/homework-3/internal/transport/http/handlers"
 )
 
 type Server interface {
@@ -28,7 +29,7 @@ func run(ctx context.Context) error {
 	defer cancels()
 
 	cfg := config.NewConfig()
-	var srv Server = http.NewServer(ctx, http.WithAddress(cfg.Server.Address))
+	var srv Server = http.NewServer(ctx, http.WithAddress(cfg.Server.Address), http.WithMount("/", handlers.NewBaseHandler().Routes()))
 
 	db := psql.NewDB(ctx)
 	if err := db.Connect(ctx, cfg.Database.Uri()); err != nil {
