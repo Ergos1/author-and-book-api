@@ -44,7 +44,8 @@ func run(ctx context.Context) error {
 	var srv Server = http.NewServer(ctx,
 		http.WithAddress(cfg.Server.Address),
 		http.WithMount("/", handlers.NewBaseHandler().Routes()),
-		http.WithMount("/accounts", handlers.NewAuthorHandler(db).Routes()),
+		http.WithMount("/authors", handlers.NewAuthorHandler(db).Routes()),
+		http.WithMount("/books", handlers.NewBookHandler(db).Routes()),
 	)
 
 	if err := srv.Run(); err != nil {

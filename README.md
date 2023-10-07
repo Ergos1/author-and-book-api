@@ -12,19 +12,35 @@
 ## Пример:
 Создать автора:
 
-``curl -X POST -i http://localhost:9000/accounts -d '{"id": 1, "name": "Yera"}'``
+``curl -X POST -i http://localhost:9000/authors -d '{"id": 1, "name": "Yera"}'``
 
 Получить автора:
 
-``curl -X GET -i http://localhost:9000/accounts/1``
+``curl -X GET -i http://localhost:9000/authors/1``
 
 Обновить автора:
 
-``curl -X PUT -i http://localhost:9000/accounts/1 -d '{"name": "Yera3"}'``
+``curl -X PUT -i http://localhost:9000/authors/1 -d '{"name": "Yera3"}'``
 
 Удалить автора:
 
-``curl -X DELETE -i http://localhost:9000/accounts/1``
+``curl -X DELETE -i http://localhost:9000/authors/1``
+
+Создать кингу:
+
+``curl -X POST -i http://localhost:9000/books -d '{"id": 1, "name": "Yera", "rating": 1, "author_id": 1}'``
+
+Получить книгу:
+
+``curl -X GET -i http://localhost:9000/books/1``
+
+Обновить книгу:
+
+``curl -X PUT -i http://localhost:9000/books/1 -d '{"id": 1, "name": "Yera", "rating": 1, "author_id": 1}'``
+
+Удалить книгу:
+
+``curl -X DELETE -i http://localhost:9000/books/1``
 
 ## Дано:
 

@@ -26,4 +26,5 @@ type BookRepo interface {
 	GetById(ctx context.Context, id int64) (*models.Book, error)
 	Update(ctx context.Context, id int64, bookModel *models.Book) error
 	Delete(ctx context.Context, id int64) error
+	GetByAuthorId(ctx context.Context, authorID int64) ([]*models.Book, error)
 }
