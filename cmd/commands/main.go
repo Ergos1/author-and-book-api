@@ -36,13 +36,6 @@ func getService(ctx context.Context) Service {
 		log.Fatalf("[MAIN] Error while connecting db: %v", err)
 	}
 
-	defer func() {
-		err := db.Close(ctx)
-		if err != nil {
-			log.Printf("[MAIN] Error while closing db: %v", err)
-		}
-	}()
-
 	authorRepo := author.NewAuthorRepoPsql(db)
 	authorService := author.NewAuthorService(authorRepo)
 
@@ -67,6 +60,16 @@ func run(ctx context.Context) error {
 	cmder.AddCommand(ctx, commander.Command{
 		Name:        "create-account",
 		Description: "Creates account",
+		Flags: []commander.Flag{
+			{
+				Name:        "author_id",
+				Description: "id of author",
+			},
+			{
+				Name:        "author_name",
+				Description: "name of author",
+			},
+		},
 		Handler: func(ctx context.Context, args []string) error {
 			authorID, err := cmder.Flags().GetInt64("author_id")
 			if err != nil {
@@ -90,7 +93,7 @@ func run(ctx context.Context) error {
 				return err
 			}
 
-			fmt.Println(id)
+			fmt.Printf("Created account id = %v", id)
 
 			return nil
 		},

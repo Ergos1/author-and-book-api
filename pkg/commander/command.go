@@ -7,6 +7,7 @@ import (
 type Command struct {
 	Name        string
 	Description string
+	Flags       []Flag
 	Handler     func(ctx context.Context, args []string) error
 }
 

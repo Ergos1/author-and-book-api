@@ -11,5 +11,9 @@ func NewDB(ctx context.Context, uri string) (*Database, error) {
 	if err != nil {
 		return nil, err
 	}
-	return newDatabase(pool), nil
+
+	database := newDatabase(pool)
+	go database.CloseGracefully(ctx)
+
+	return database, nil
 }

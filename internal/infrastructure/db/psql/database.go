@@ -40,7 +40,9 @@ func (db Database) ExecQueryRow(ctx context.Context, query string, args ...inter
 	return db.cluster.QueryRow(ctx, query, args...)
 }
 
-func (db Database) Close(ctx context.Context) error {
+func (db Database) CloseGracefully(ctx context.Context) error {
+	<-ctx.Done()
+
 	if db.cluster == nil {
 		return ErrDatabaseAlreadyClosed
 	}

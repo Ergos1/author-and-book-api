@@ -38,13 +38,6 @@ func run(ctx context.Context) error {
 		log.Fatalf("[MAIN] Error while connecting db: %v", err)
 	}
 
-	defer func() {
-		err := db.Close(ctx)
-		if err != nil {
-			log.Printf("[MAIN] Error while closing db: %v", err)
-		}
-	}()
-
 	authorRepo := author.NewAuthorRepoPsql(db)
 	authorService := author.NewAuthorService(authorRepo)
 

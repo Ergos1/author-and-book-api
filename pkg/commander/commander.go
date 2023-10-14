@@ -52,6 +52,10 @@ func (cmder *Commander) AddCommand(ctx context.Context, command Command) {
 func (cmder *Commander) DisplayHelp(ctx context.Context) {
 	for index, command := range cmder.Commands {
 		fmt.Fprintf(cmder.getOutWriter(), "[%v] \nCommand: %v \nDescription: %v\n", index+1, command.Name, command.Description)
+		fmt.Fprintf(cmder.getOutWriter(), "Flags:\n")
+		for _, flag := range command.Flags {
+			fmt.Fprintf(cmder.getOutWriter(), "%v\n", flag.String())
+		}
 	}
 }
 
