@@ -12,7 +12,11 @@ ifeq ($(POSTGRES_URI),)
 endif
 
 run:
-	go run cmd/hw3/main.go
+	go run cmd/commands/main.go $(ARGS)
+
+run-app:
+	go run cmd/app_http/main.go
+
 
 migration-create:
 	$(GOPATH)/bin/goose -dir "$(MIGRATION_FOLDER)" create "$(name)" sql

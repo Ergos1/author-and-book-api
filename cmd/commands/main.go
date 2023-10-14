@@ -18,6 +18,7 @@ import (
 
 type Service interface {
 	CreateAuthor(ctx context.Context, request core.CreateAuthorRequest) (int64, error)
+	GetAuthorById(ctx context.Context, id int64) (*author.Author, error)
 }
 
 func main() {
@@ -58,8 +59,8 @@ func run(ctx context.Context) error {
 	}
 
 	cmder.AddCommand(ctx, commander.Command{
-		Name:        "create-account",
-		Description: "Creates account",
+		Name:        "create-author",
+		Description: "Creates author",
 		Flags: []commander.Flag{
 			{
 				Name:        "author_id",
@@ -81,6 +82,8 @@ func run(ctx context.Context) error {
 				return err
 			}
 
+			fmt.Println(authorID)
+
 			if authorID == 0 || authorName == "" {
 				return errors.New("bad args")
 			}
@@ -95,6 +98,35 @@ func run(ctx context.Context) error {
 
 			fmt.Printf("Created account id = %v", id)
 
+			return nil
+		},
+	})
+
+	cmder.AddCommand(ctx, commander.Command{
+		Name:        "get-author",
+		Description: "Creates author",
+		Flags: []commander.Flag{
+			{
+				Name:        "author_id",
+				Description: "id of author",
+			},
+		},
+		Handler: func(ctx context.Context, args []string) error {
+			authorID, err := cmder.Flags().GetInt64("author_id")
+			if err != nil {
+				return err
+			}
+
+			if authorID == 0 {
+				return errors.New("bad args")
+			}
+
+			author, err := service.GetAuthorById(ctx, authorID)
+			if err != nil {
+				return err
+			}
+
+			fmt.Printf("Author = %v", *author)
 			return nil
 		},
 	})

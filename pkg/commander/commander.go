@@ -26,7 +26,7 @@ func (cmder *Commander) Args() []string {
 }
 
 func (cmder *Commander) Run(ctx context.Context) error {
-	if len(cmder.Args()) < 1 {
+	if len(cmder.Args()) < 2 {
 		return ErrBadArgs
 	}
 	cmder.Flags().Parse(cmder.Args())
