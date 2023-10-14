@@ -10,6 +10,7 @@ require (
 	github.com/jackc/pgconn v1.14.1
 	github.com/jackc/pgx/v4 v4.18.1
 	github.com/joho/godotenv v1.5.1
+	github.com/spf13/pflag v1.0.5
 )
 
 require (
@@ -24,7 +25,6 @@ require (
 	github.com/jackc/pgtype v1.14.0 // indirect
 	github.com/jackc/puddle v1.3.0 // indirect
 	github.com/leodido/go-urn v1.2.4 // indirect
-	github.com/spf13/pflag v1.0.5 // indirect
 	golang.org/x/crypto v0.13.0 // indirect
 	golang.org/x/text v0.13.0 // indirect
 	gopkg.in/go-playground/assert.v1 v1.2.1 // indirect

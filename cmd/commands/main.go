@@ -1,12 +1,14 @@
 package main
 
 import (
+	"bufio"
 	"context"
 	"errors"
 	"fmt"
 	"log"
 	"os"
 	"os/signal"
+	"strings"
 
 	"gitlab.ozon.dev/ergossteam/homework-3/internal/app/author"
 	"gitlab.ozon.dev/ergossteam/homework-3/internal/app/book"
@@ -20,6 +22,10 @@ type Service interface {
 	CreateAuthor(ctx context.Context, request core.CreateAuthorRequest) (int64, error)
 	GetAuthorById(ctx context.Context, id int64) (*author.Author, error)
 }
+
+var ErrBadArgs = errors.New("bad args")
+var ErrBadFilePath = errors.New("bad file path")
+var ErrCannotCreateFile = errors.New("cannot create file")
 
 func main() {
 	ctx := context.Background()
@@ -82,10 +88,8 @@ func run(ctx context.Context) error {
 				return err
 			}
 
-			fmt.Println(authorID)
-
 			if authorID == 0 || authorName == "" {
-				return errors.New("bad args")
+				return ErrBadArgs
 			}
 
 			id, err := service.CreateAuthor(ctx, core.CreateAuthorRequest{
@@ -104,7 +108,7 @@ func run(ctx context.Context) error {
 
 	cmder.AddCommand(ctx, commander.Command{
 		Name:        "get-author",
-		Description: "Creates author",
+		Description: "Get author by id",
 		Flags: []commander.Flag{
 			{
 				Name:        "author_id",
@@ -118,7 +122,7 @@ func run(ctx context.Context) error {
 			}
 
 			if authorID == 0 {
-				return errors.New("bad args")
+				return ErrBadArgs
 			}
 
 			author, err := service.GetAuthorById(ctx, authorID)
@@ -131,8 +135,75 @@ func run(ctx context.Context) error {
 		},
 	})
 
-	cmder.Flags().Int64("author_id", 0, "author name")
+	cmder.AddCommand(ctx, commander.Command{
+		Name:        "gofmt",
+		Description: "format file",
+		Flags: []commander.Flag{
+			{
+				Name:        "file_path",
+				Description: "relative path of file",
+			},
+		},
+		Handler: func(ctx context.Context, args []string) error {
+			filePath, err := cmder.Flags().GetString("file_path")
+			if err != nil {
+				return err
+			}
+
+			if filePath == "" {
+				return ErrBadArgs
+			}
+
+			fileContent, err := os.ReadFile(filePath)
+			if err != nil {
+				return ErrBadFilePath
+			}
+
+			writeFile, err := os.Create("output.txt")
+			if err != nil {
+				return ErrCannotCreateFile
+			}
+
+			lines := make([]string, 0)
+
+			scanner := bufio.NewScanner(strings.NewReader(string(fileContent)))
+			for scanner.Scan() {
+				line := scanner.Text()
+				lines = append(lines, line)
+			}
+
+			isStart := true
+			formatedLines := make([]string, 0, len(lines))
+
+			for index, line := range lines {
+				if isStart {
+					line = "\t" + line
+					isStart = false
+				}
+
+				if line == "" {
+					isStart = true
+					formatedLines = append(formatedLines, "")
+					continue
+				}
+
+				if (index == len(lines)-1 || lines[index+1] == "") && string(line[len(line)-1]) != "." {
+					line = line + "."
+				}
+				formatedLines = append(formatedLines, line)
+			}
+
+			for _, line := range formatedLines {
+				writeFile.WriteString(line + "\n")
+			}
+
+			return nil
+		},
+	})
+
+	cmder.Flags().Int64("author_id", 0, "author id")
 	cmder.Flags().String("author_name", "", "author name")
+	cmder.Flags().String("file_path", "", "relative path of file")
 
 	if err := cmder.Run(ctx); err != nil {
 		return err
