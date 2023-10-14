@@ -17,8 +17,6 @@ type AuthorService interface {
 type BookService interface {
 	GetByID(ctx context.Context, id int64) (*book.Book, error)
 	Create(ctx context.Context, book *book.Book) (int64, error)
-	// Update(ctx context.Context, id int64, book *book.Book) error
-	// Delete(ctx context.Context, id int64) error
 	GetByAuthorID(ctx context.Context, authorID int64) ([]*book.Book, error)
 }
 
