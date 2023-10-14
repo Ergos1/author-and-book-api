@@ -7,6 +7,7 @@ type BookRepo interface {
 	GetById(ctx context.Context, id int64) (*BookRow, error)
 	Update(ctx context.Context, id int64, authorModel *BookRow) error
 	Delete(ctx context.Context, id int64) error
+	GetByAuthorId(ctx context.Context, authorID int64) ([]*BookRow, error)
 }
 
 type BookService struct {

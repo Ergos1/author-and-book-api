@@ -5,7 +5,7 @@ ifndef $(GOPATH)
     export GOPATH
 endif
 
-MIGRATION_FOLDER=$(CURDIR)/internal/db/migrations
+MIGRATION_FOLDER=$(CURDIR)/internal/app/migrations
 
 ifeq ($(POSTGRES_URI),)
 	POSTGRES_URI := user=$(POSTGRES_USER) password=$(POSTGRES_PASSWORD) dbname=$(POSTGRES_DB) host=$(POSTGRES_HOST) port=$(POSTGRES_PORT) sslmode=disable

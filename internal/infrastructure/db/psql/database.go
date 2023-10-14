@@ -2,12 +2,15 @@ package psql
 
 import (
 	"context"
+	"errors"
 
 	"github.com/georgysavva/scany/pgxscan"
 	"github.com/jackc/pgconn"
 	"github.com/jackc/pgx/v4"
 	"github.com/jackc/pgx/v4/pgxpool"
 )
+
+var ErrDatabaseAlreadyClosed = errors.New("database is already closed")
 
 type Database struct {
 	cluster *pgxpool.Pool
@@ -35,4 +38,13 @@ func (db Database) Exec(ctx context.Context, query string, args ...interface{}) 
 
 func (db Database) ExecQueryRow(ctx context.Context, query string, args ...interface{}) pgx.Row {
 	return db.cluster.QueryRow(ctx, query, args...)
+}
+
+func (db Database) Close(ctx context.Context) error {
+	if db.cluster == nil {
+		return ErrDatabaseAlreadyClosed
+	}
+
+	db.GetPool(ctx).Close()
+	return nil
 }
