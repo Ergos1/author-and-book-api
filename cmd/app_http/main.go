@@ -33,10 +33,11 @@ func run(ctx context.Context) error {
 
 	cfg := config.NewConfig()
 
-	db, err := psql.NewDB(ctx, cfg.Database.Uri())
-	if err != nil {
-		log.Fatalf("[MAIN] Error while connecting db: %v", err)
+	db := psql.NewDB(ctx)
+	if err := db.Connect(ctx, cfg.Database.Uri()); err != nil {
+		log.Fatal(err)
 	}
+	defer db.Close(ctx)
 
 	authorRepo := author.NewAuthorRepoPsql(db)
 	authorService := author.NewAuthorService(authorRepo)

@@ -35,14 +35,7 @@ func main() {
 	}
 }
 
-func getService(ctx context.Context) Service {
-	cfg := config.NewConfig()
-
-	db, err := psql.NewDB(ctx, cfg.Database.Uri())
-	if err != nil {
-		log.Fatalf("[MAIN] Error while connecting db: %v", err)
-	}
-
+func getService(ctx context.Context, db psql.PGX) Service {
 	authorRepo := author.NewAuthorRepoPsql(db)
 	authorService := author.NewAuthorService(authorRepo)
 
@@ -54,10 +47,20 @@ func getService(ctx context.Context) Service {
 }
 
 func run(ctx context.Context) error {
+	log.SetPrefix("main")
+
 	ctx, cancels := signal.NotifyContext(ctx, os.Interrupt)
 	defer cancels()
 
-	service := getService(ctx)
+	cfg := config.NewConfig()
+
+	db := psql.NewDB(ctx)
+	if err := db.Connect(ctx, cfg.Database.Uri()); err != nil {
+		log.Fatal(err)
+	}
+	defer db.Close(ctx)
+
+	service := getService(ctx, db)
 
 	cmder := &commander.Commander{
 		Commands:  make([]commander.Command, 0),

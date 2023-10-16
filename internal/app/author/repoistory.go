@@ -6,20 +6,14 @@ import (
 
 	"github.com/jackc/pgconn"
 	"github.com/jackc/pgx/v4"
+	"gitlab.ozon.dev/ergossteam/homework-3/internal/infrastructure/db/psql"
 )
 
-type PsqlConnector interface {
-	ExecQueryRow(ctx context.Context, query string, args ...interface{}) pgx.Row
-	Exec(ctx context.Context, query string, args ...interface{}) (pgconn.CommandTag, error)
-	Select(ctx context.Context, dest interface{}, query string, args ...interface{}) error
-	Get(ctx context.Context, dest interface{}, query string, args ...interface{}) error
-}
-
 type AuthorRepoPsql struct {
-	db PsqlConnector
+	db psql.PGX
 }
 
-func NewAuthorRepoPsql(db PsqlConnector) *AuthorRepoPsql {
+func NewAuthorRepoPsql(db psql.PGX) *AuthorRepoPsql {
 	return &AuthorRepoPsql{
 		db: db,
 	}
