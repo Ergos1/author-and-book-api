@@ -1,3 +1,4 @@
+//go:generate mockgen -source=./repository.go -destination=./mocks/repository.go -package=mock_repository
 package author
 
 import (
@@ -8,6 +9,13 @@ import (
 	"github.com/jackc/pgx/v4"
 	"gitlab.ozon.dev/ergossteam/homework-3/internal/infrastructure/db/psql"
 )
+
+type AuthorRepo interface {
+	Create(ctx context.Context, authorModel *AuthorRow) (int64, error)
+	GetById(ctx context.Context, id int64) (*AuthorRow, error)
+	Update(ctx context.Context, id int64, authorModel *AuthorRow) error
+	Delete(ctx context.Context, id int64) error
+}
 
 type AuthorRepoPsql struct {
 	db psql.PGX
@@ -21,7 +29,7 @@ func NewAuthorRepoPsql(db psql.PGX) *AuthorRepoPsql {
 
 func (r *AuthorRepoPsql) Create(ctx context.Context, authorModel *AuthorRow) (int64, error) {
 	var id int64
-	err := r.db.ExecQueryRow(ctx, "INSERT INTO authors(id, name) VALUES($1, $2) RETURNING id", authorModel.ID, authorModel.Name).Scan(&id)
+	err := r.db.Create(ctx, &id, "INSERT INTO authors(id, name) VALUES($1, $2) RETURNING id", authorModel.ID, authorModel.Name)
 	if err != nil && err.(*pgconn.PgError).Code == "23505" {
 		return id, ErrAuthorDuplicate
 	}
@@ -32,8 +40,12 @@ func (r *AuthorRepoPsql) Create(ctx context.Context, authorModel *AuthorRow) (in
 func (r *AuthorRepoPsql) GetById(ctx context.Context, id int64) (*AuthorRow, error) {
 	var author AuthorRow
 	err := r.db.Get(ctx, &author, "SELECT id, name FROM authors WHERE id=$1", id)
-	if errors.Is(err, pgx.ErrNoRows) {
-		return nil, ErrAuthorNotFound
+	if err != nil {
+		if errors.Is(err, pgx.ErrNoRows) {
+			return nil, ErrAuthorNotFound
+		}
+
+		return nil, err
 	}
 
 	return &author, nil

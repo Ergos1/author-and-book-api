@@ -6,7 +6,6 @@ import (
 
 	"github.com/go-chi/chi"
 	"github.com/go-chi/render"
-	author_service "gitlab.ozon.dev/ergossteam/homework-3/internal/app/author"
 	book_service "gitlab.ozon.dev/ergossteam/homework-3/internal/app/book"
 	"gitlab.ozon.dev/ergossteam/homework-3/internal/app/core"
 )
@@ -32,7 +31,7 @@ func (h *BaseHandler) Check(w http.ResponseWriter, r *http.Request) {
 }
 
 type Service interface {
-	GetAuthorById(ctx context.Context, id int64) (*author_service.Author, error)
+	GetAuthorById(ctx context.Context, id int64) (*core.AuthorWithBooks, error)
 	CreateAuthor(ctx context.Context, request core.CreateAuthorRequest) (int64, error)
 	GetBooksByAuthorID(ctx context.Context, authorID int64) ([]*book_service.Book, error)
 	GetBookById(ctx context.Context, id int64) (*book_service.Book, error)

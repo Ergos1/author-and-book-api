@@ -1,3 +1,4 @@
+//go:generate mockgen -source=./database.go -destination=./mocks/database.go -package=mock_database
 package psql
 
 import (
@@ -25,6 +26,7 @@ type DBops interface {
 	Select(ctx context.Context, dest interface{}, query string, args ...interface{}) error
 	Exec(ctx context.Context, query string, args ...interface{}) (pgconn.CommandTag, error)
 	ExecQueryRow(ctx context.Context, query string, args ...interface{}) pgx.Row
+	Create(ctx context.Context, dest interface{}, query string, args ...interface{}) error
 }
 
 type Database struct {
@@ -81,4 +83,8 @@ func (db *Database) Exec(ctx context.Context, query string, args ...interface{})
 
 func (db *Database) ExecQueryRow(ctx context.Context, query string, args ...interface{}) pgx.Row {
 	return db.cluster.QueryRow(ctx, query, args...)
+}
+
+func (db *Database) Create(ctx context.Context, dest interface{}, query string, args ...interface{}) error {
+	return db.cluster.QueryRow(ctx, query, args...).Scan(dest)
 }

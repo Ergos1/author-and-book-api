@@ -20,7 +20,7 @@ import (
 
 type Service interface {
 	CreateAuthor(ctx context.Context, request core.CreateAuthorRequest) (int64, error)
-	GetAuthorById(ctx context.Context, id int64) (*author.Author, error)
+	GetAuthorById(ctx context.Context, id int64) (*core.AuthorWithBooks, error)
 }
 
 var ErrBadArgs = errors.New("bad args")

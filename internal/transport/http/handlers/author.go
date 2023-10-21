@@ -3,7 +3,6 @@ package handlers
 import (
 	"errors"
 	"net/http"
-	"strconv"
 
 	"github.com/go-chi/chi"
 	"github.com/go-chi/render"
@@ -35,8 +34,7 @@ func (h *AuthorHandler) Routes() chi.Router {
 }
 
 func (h *AuthorHandler) GetAuthorByID(w http.ResponseWriter, r *http.Request) {
-	idStr := chi.URLParam(r, "id")
-	id, err := strconv.ParseInt(idStr, 10, 64)
+	id, err := ParseID(r)
 	if err != nil {
 		render.Status(r, http.StatusBadRequest)
 		render.JSON(w, r, Response{Err: ErrInvalidId.Error()})
@@ -50,28 +48,8 @@ func (h *AuthorHandler) GetAuthorByID(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	books, err := h.service.GetBooksByAuthorID(r.Context(), author.ID)
-	if err != nil {
-		render.Status(r, http.StatusInternalServerError)
-		render.JSON(w, r, Response{Err: err.Error()})
-		return
-	}
-
-	booksDto := make([]dtos.ReadBookDTO, 0, len(books))
-	for _, book := range books {
-		booksDto = append(booksDto, dtos.ReadBookDTO{
-			Id:       book.ID,
-			Name:     book.Name,
-			Rating:   book.Rating,
-			AuthorID: book.AuthorID,
-		})
-	}
-
-	authorDto := dtos.ReadAuthorDTO{
-		Id:    author.ID,
-		Name:  author.Name,
-		Books: booksDto,
-	}
+	authorDto := dtos.ReadAuthorDTO{}
+	authorDto.MapFromAuthorWithBooks(author)
 
 	render.Status(r, http.StatusOK)
 	render.JSON(w, r, Response{Data: authorDto})
