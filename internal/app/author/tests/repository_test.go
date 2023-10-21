@@ -80,7 +80,7 @@ func TestAuthor_Create(t *testing.T) {
 		// arrange
 		s := setUp(t)
 		defer s.tearDown()
-		s.mockDb.EXPECT().Create(gomock.Any(), gomock.Any(), "INSERT INTO authors(id, name) VALUES($1, $2) RETURNING id", gomock.Any(), gomock.Any()).Return(nil)
+		s.mockDb.EXPECT().Create(ctx, gomock.Any(), "INSERT INTO authors(id, name) VALUES($1, $2) RETURNING id", gomock.Any(), gomock.Any()).Return(nil)
 
 		// act
 		id, err := s.repo.Create(ctx, Author().Valid().P())

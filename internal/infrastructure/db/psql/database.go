@@ -53,6 +53,8 @@ func (db *Database) Close(ctx context.Context) error {
 	}
 
 	db.GetPool(ctx).Close()
+	db.cluster = nil
+
 	return nil
 }
 

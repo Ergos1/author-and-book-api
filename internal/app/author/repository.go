@@ -30,10 +30,11 @@ func NewAuthorRepoPsql(db psql.PGX) *AuthorRepoPsql {
 func (r *AuthorRepoPsql) Create(ctx context.Context, authorModel *AuthorRow) (int64, error) {
 	var id int64
 	err := r.db.Create(ctx, &id, "INSERT INTO authors(id, name) VALUES($1, $2) RETURNING id", authorModel.ID, authorModel.Name)
-	if err != nil && err.(*pgconn.PgError).Code == "23505" {
-		return id, ErrAuthorDuplicate
+	if err != nil {
+		if err.(*pgconn.PgError).Code == "23505" {
+			return id, ErrAuthorDuplicate
+		}
 	}
-
 	return id, err
 }
 
