@@ -1,6 +1,42 @@
 # Homework 5
 
 
+
+## Заметка
+Не забудьте создать файл .env
+
+Вот его пример:
+
+``
+POSTGRES_DB=test
+POSTGRES_USER=test
+POSTGRES_PASSWORD=test
+POSTGRES_PORT=5433
+POSTGRES_HOST=localhost
+SERVER_ADDRESS=:9000
+``
+
+
+## Запуск
+
+Интеграционный тест:
+``make test-integration``
+
+Юнит(Модульный) тест:
+``make test-unit``
+
+Очистка бд:
+``make clear-db``
+
+Поднять бд:
+``make run-db``
+
+Стоп бд:
+``make stop-db``
+
+Миграция:
+``make migration-up``
+
 ## Задание
 
 * Отрефакторить код дз 3 недели(если необходимо). Применить подходит DI, переписать методы бд на использование интерфейсов

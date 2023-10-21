@@ -1,3 +1,6 @@
+//go:build unit
+// +build unit
+
 package tests
 
 import "github.com/jackc/pgconn"
