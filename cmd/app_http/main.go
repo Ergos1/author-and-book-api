@@ -12,6 +12,7 @@ import (
 	"gitlab.ozon.dev/ergossteam/homework-3/internal/config"
 	"gitlab.ozon.dev/ergossteam/homework-3/internal/infrastructure/db/psql"
 	"gitlab.ozon.dev/ergossteam/homework-3/internal/infrastructure/kafka"
+	kafkarequestlogger "gitlab.ozon.dev/ergossteam/homework-3/internal/kafka_request_logger"
 	"gitlab.ozon.dev/ergossteam/homework-3/internal/transport/http"
 	"gitlab.ozon.dev/ergossteam/homework-3/internal/transport/http/handlers"
 )
@@ -64,10 +65,12 @@ func run(ctx context.Context) error {
 		log.Fatal(err)
 	}
 
+	requestLogger := kafkarequestlogger.NewKafkaRequestLogger(producer)
+
 	var srv Server = http.NewServer(ctx,
 		http.WithAddress(cfg.Server.Address),
 		http.WithMount("/", handlers.NewBaseHandler().Routes()),
-		http.WithMount("/authors", handlers.NewAuthorHandler(service).Routes()),
+		http.WithMount("/authors", handlers.NewAuthorHandler(service, requestLogger).Routes()),
 		http.WithMount("/books", handlers.NewBookHandler(service).Routes()),
 		http.WithKafkaProducer(producer),
 		http.WithKafkaConsumer(consumer),
