@@ -54,7 +54,7 @@ func (c *Consumer) Subscribe(ctx context.Context, topic string, handler func(mes
 		return err
 	}
 
-	initialOffset := sarama.OffsetOldest
+	initialOffset := sarama.OffsetNewest
 
 	for _, partition := range partitionList {
 		pc, err := c.SingleConsumer.ConsumePartition(topic, partition, initialOffset)

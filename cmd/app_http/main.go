@@ -71,8 +71,9 @@ func run(ctx context.Context) error {
 
 	var srv Server = http.NewServer(ctx,
 		http.WithAddress(cfg.Server.Address),
+		http.WithRequestLogger(requestLogger),
 		http.WithMount("/", handlers.NewBaseHandler().Routes()),
-		http.WithMount("/authors", handlers.NewAuthorHandler(service, requestLogger).Routes()),
+		http.WithMount("/authors", handlers.NewAuthorHandler(service).Routes()),
 		http.WithMount("/books", handlers.NewBookHandler(service).Routes()),
 	)
 

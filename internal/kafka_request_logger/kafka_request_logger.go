@@ -3,6 +3,7 @@ package kafkarequestlogger
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"log"
 
 	"github.com/Shopify/sarama"
@@ -34,13 +35,15 @@ func NewKafkaRequestLogger(producer KafkaProducer, consumer KafkaConsumer) *Kafk
 
 type KafkaMessageValue struct {
 	Method string `json:"method"`
+	Url    string `json:"url"`
 	Body   any    `json:"body"`
 }
 
-func (krl *KafkaRequestLogger) buildMessage(method string, body any) (*sarama.ProducerMessage, error) {
+func (krl *KafkaRequestLogger) buildMessage(method string, url string, body any) (*sarama.ProducerMessage, error) {
 	messageValue := &KafkaMessageValue{
 		Method: method,
 		Body:   body,
+		Url:    url,
 	}
 
 	messageValueStr, err := json.Marshal(messageValue)
@@ -55,8 +58,9 @@ func (krl *KafkaRequestLogger) buildMessage(method string, body any) (*sarama.Pr
 	}, nil
 }
 
-func (krl *KafkaRequestLogger) Log(method string, body any) error {
-	message, err := krl.buildMessage(method, body)
+func (krl *KafkaRequestLogger) Log(method string, url string, body any) error {
+	fmt.Println("URL", url)
+	message, err := krl.buildMessage(method, url, body)
 	if err != nil {
 		return err
 	}

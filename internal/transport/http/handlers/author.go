@@ -2,7 +2,6 @@ package handlers
 
 import (
 	"errors"
-	"log"
 	"net/http"
 
 	"github.com/go-chi/chi"
@@ -13,19 +12,13 @@ import (
 	"gitlab.ozon.dev/ergossteam/homework-3/internal/transport/http/dtos"
 )
 
-type RequestLogger interface {
-	Log(method string, body any) error
-}
-
 type AuthorHandler struct {
-	service       Service
-	requestLogger RequestLogger
+	service Service
 }
 
-func NewAuthorHandler(s Service, requestLogger RequestLogger) *AuthorHandler {
+func NewAuthorHandler(s Service) *AuthorHandler {
 	return &AuthorHandler{
-		service:       s,
-		requestLogger: requestLogger,
+		service: s,
 	}
 }
 
@@ -60,10 +53,6 @@ func (h *AuthorHandler) GetAuthorByID(w http.ResponseWriter, r *http.Request) {
 
 	render.Status(r, http.StatusOK)
 	render.JSON(w, r, Response{Data: authorDto})
-
-	if err := h.requestLogger.Log("GET", nil); err != nil {
-		log.Printf("Request Logger Problem")
-	}
 }
 
 func (h *AuthorHandler) CreateAuthor(w http.ResponseWriter, r *http.Request) {
@@ -100,10 +89,6 @@ func (h *AuthorHandler) CreateAuthor(w http.ResponseWriter, r *http.Request) {
 
 	render.Status(r, http.StatusCreated)
 	render.JSON(w, r, Response{Data: author})
-
-	if err := h.requestLogger.Log("POST", createAuthorDTO); err != nil {
-		log.Printf("Request Logger Problem")
-	}
 }
 
 // func (ah *AuthorHandler) UpdateAuthor(w http.ResponseWriter, r *http.Request) {
