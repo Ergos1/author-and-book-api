@@ -9,11 +9,9 @@ import (
 )
 
 type Server struct {
-	Address  string
-	Handler  chi.Router
-	ctx      context.Context
-	Producer KafkaProducer
-	Consumer KafkaConsumer
+	Address string
+	Handler chi.Router
+	ctx     context.Context
 }
 
 func NewServer(ctx context.Context, opts ...ServerOption) *Server {

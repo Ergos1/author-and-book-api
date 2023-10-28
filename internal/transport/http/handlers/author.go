@@ -100,6 +100,10 @@ func (h *AuthorHandler) CreateAuthor(w http.ResponseWriter, r *http.Request) {
 
 	render.Status(r, http.StatusCreated)
 	render.JSON(w, r, Response{Data: author})
+
+	if err := h.requestLogger.Log("POST", createAuthorDTO); err != nil {
+		log.Printf("Request Logger Problem")
+	}
 }
 
 // func (ah *AuthorHandler) UpdateAuthor(w http.ResponseWriter, r *http.Request) {

@@ -65,15 +65,15 @@ func run(ctx context.Context) error {
 		log.Fatal(err)
 	}
 
-	requestLogger := kafkarequestlogger.NewKafkaRequestLogger(producer)
+	requestLogger := kafkarequestlogger.NewKafkaRequestLogger(producer, consumer)
+
+	go requestLogger.Subscribe(ctx)
 
 	var srv Server = http.NewServer(ctx,
 		http.WithAddress(cfg.Server.Address),
 		http.WithMount("/", handlers.NewBaseHandler().Routes()),
 		http.WithMount("/authors", handlers.NewAuthorHandler(service, requestLogger).Routes()),
 		http.WithMount("/books", handlers.NewBookHandler(service).Routes()),
-		http.WithKafkaProducer(producer),
-		http.WithKafkaConsumer(consumer),
 	)
 
 	if err := srv.Run(); err != nil {

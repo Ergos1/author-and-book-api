@@ -2,7 +2,6 @@ package kafka
 
 import (
 	"context"
-	"fmt"
 	"time"
 
 	"github.com/Shopify/sarama"
@@ -72,12 +71,9 @@ func (c *Consumer) Subscribe(ctx context.Context, topic string, handler func(mes
 						return
 					}
 
-					fmt.Println("Read Topic: ", topic, " Partition: ", partition, " Offset: ", message.Offset)
-					fmt.Println("Received Key: ", string(message.Key), " Value: ", string(message.Value))
 					handler(message)
 
 				case <-ctx.Done():
-					fmt.Println("[Consumer] stop listenning")
 					return
 				}
 			}

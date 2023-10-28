@@ -1,7 +1,9 @@
 package kafkarequestlogger
 
 import (
+	"context"
 	"encoding/json"
+	"log"
 
 	"github.com/Shopify/sarama"
 )
@@ -14,13 +16,19 @@ type KafkaProducer interface {
 	SendSyncMessage(message *sarama.ProducerMessage) (partition int32, offset int64, err error)
 }
 
-type KafkaRequestLogger struct {
-	producer KafkaProducer
+type KafkaConsumer interface {
+	Subscribe(ctx context.Context, topic string, handler func(message *sarama.ConsumerMessage)) error
 }
 
-func NewKafkaRequestLogger(producer KafkaProducer) *KafkaRequestLogger {
+type KafkaRequestLogger struct {
+	producer KafkaProducer
+	consumer KafkaConsumer
+}
+
+func NewKafkaRequestLogger(producer KafkaProducer, consumer KafkaConsumer) *KafkaRequestLogger {
 	return &KafkaRequestLogger{
 		producer: producer,
+		consumer: consumer,
 	}
 }
 
@@ -56,6 +64,16 @@ func (krl *KafkaRequestLogger) Log(method string, body any) error {
 	if _, _, err := krl.producer.SendSyncMessage(message); err != nil {
 		return err
 	}
+
+	return nil
+}
+
+func (krl *KafkaRequestLogger) Subscribe(ctx context.Context) error {
+	log.SetPrefix("[KafkaRequestLogger.Subscribe] ")
+	krl.consumer.Subscribe(ctx, topic, func(message *sarama.ConsumerMessage) {
+
+		log.Printf("\nRequest timestamp: %v\nRequest metadata: %v\n", message.Timestamp, string(message.Value))
+	})
 
 	return nil
 }
