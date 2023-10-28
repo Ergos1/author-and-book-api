@@ -5,6 +5,6 @@ services:
         container_name: "hw3-test-db"
         image: postgres:13
         env_file:
-            - ../.env
+            - ../../.env
         ports:
             - "5433:5432"

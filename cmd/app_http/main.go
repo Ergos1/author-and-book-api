@@ -11,6 +11,7 @@ import (
 	"gitlab.ozon.dev/ergossteam/homework-3/internal/app/core"
 	"gitlab.ozon.dev/ergossteam/homework-3/internal/config"
 	"gitlab.ozon.dev/ergossteam/homework-3/internal/infrastructure/db/psql"
+	"gitlab.ozon.dev/ergossteam/homework-3/internal/infrastructure/kafka"
 	"gitlab.ozon.dev/ergossteam/homework-3/internal/transport/http"
 	"gitlab.ozon.dev/ergossteam/homework-3/internal/transport/http/handlers"
 )
@@ -47,11 +48,29 @@ func run(ctx context.Context) error {
 
 	service := core.NewService(authorService, bookService)
 
+	brokers := []string{
+		"localhost:9091",
+		"localhost:9092",
+		"localhost:9093",
+	}
+
+	producer, err := kafka.NewProducer(brokers)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	consumer, err := kafka.NewConsumer(brokers)
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	var srv Server = http.NewServer(ctx,
 		http.WithAddress(cfg.Server.Address),
 		http.WithMount("/", handlers.NewBaseHandler().Routes()),
 		http.WithMount("/authors", handlers.NewAuthorHandler(service).Routes()),
 		http.WithMount("/books", handlers.NewBookHandler(service).Routes()),
+		http.WithKafkaProducer(producer),
+		http.WithKafkaConsumer(consumer),
 	)
 
 	if err := srv.Run(); err != nil {
