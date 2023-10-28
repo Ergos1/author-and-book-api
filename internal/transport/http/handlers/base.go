@@ -34,6 +34,7 @@ type Service interface {
 	GetAuthorById(ctx context.Context, id int64) (*core.AuthorWithBooks, error)
 	CreateAuthor(ctx context.Context, request core.CreateAuthorRequest) (int64, error)
 	UpdateAuthor(ctx context.Context, request core.UpdateAuthorRequest) error
+	DeleteAuthorById(ctx context.Context, id int64) error
 	GetBooksByAuthorID(ctx context.Context, authorID int64) ([]*book_service.Book, error)
 	GetBookById(ctx context.Context, id int64) (*book_service.Book, error)
 	CreateBook(ctx context.Context, request core.CreateBookRequest) (int64, error)
