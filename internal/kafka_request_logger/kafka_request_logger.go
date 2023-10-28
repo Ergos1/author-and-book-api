@@ -3,7 +3,6 @@ package kafkarequestlogger
 import (
 	"context"
 	"encoding/json"
-	"fmt"
 	"log"
 
 	"github.com/Shopify/sarama"
@@ -59,7 +58,6 @@ func (krl *KafkaRequestLogger) buildMessage(method string, url string, body any)
 }
 
 func (krl *KafkaRequestLogger) Log(method string, url string, body any) error {
-	fmt.Println("URL", url)
 	message, err := krl.buildMessage(method, url, body)
 	if err != nil {
 		return err
