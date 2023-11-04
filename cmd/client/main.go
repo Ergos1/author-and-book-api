@@ -4,12 +4,11 @@ import (
 	"context"
 	"flag"
 	"log"
-	"net"
 
 	pb "github.com/route256/workshop-8/pkg/messages"
 	"google.golang.org/grpc"
-
-	impl "github.com/route256/workshop-8/internal/app/messages"
+	"google.golang.org/grpc/credentials/insecure"
+	"google.golang.org/protobuf/types/known/emptypb"
 )
 
 func main() {
@@ -26,15 +25,19 @@ func main() {
 }
 
 func run(ctx context.Context, addr string) error {
-	server := grpc.NewServer()
-
-	pb.RegisterMessagesServer(server, impl.New())
-
-	lis, err := net.Listen("tcp", addr)
+	conn, err := grpc.Dial(addr,
+		grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
 		return err
 	}
 
-	log.Printf("service messages listening on %q", addr)
-	return server.Serve(lis)
+	client := pb.NewMessagesClient(conn)
+
+	summary, err := client.GetMessagesSummary(ctx, &emptypb.Empty{})
+	if err != nil {
+		return err
+	}
+
+	log.Printf("count %d", summary.GetCount())
+	return nil
 }
