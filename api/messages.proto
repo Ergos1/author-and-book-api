@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+import "google/protobuf/empty.proto";
+
+option go_package = "pkg/messages";
+
+package messages;
+
+service Messages {
+    rpc GetMessagesSummary(google.protobuf.Empty) returns (MessagesSummary) {
+        
+    }
+}
+
+message MessagesSummary {
+    uint64 count = 1;
+}
