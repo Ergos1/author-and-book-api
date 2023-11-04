@@ -32,3 +32,9 @@ $ go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest
 ## (опционально) buf
 
 https://github.com/bufbuild/buf
+
+## jaeger в Docker
+
+```bash
+$ docker run -d -p 6831:6831/udp -p 16686:16686 jaegertracing/all-in-one:latest
+```

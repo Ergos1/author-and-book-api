@@ -7,7 +7,9 @@ import (
 	"net"
 
 	pb "github.com/route256/workshop-8/pkg/gateway"
+	"github.com/route256/workshop-8/pkg/logger"
 	messages_pb "github.com/route256/workshop-8/pkg/messages"
+	"go.uber.org/zap"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 
@@ -28,6 +30,14 @@ func main() {
 }
 
 func run(ctx context.Context, addr string) error {
+	zapLogger, err := zap.NewProduction()
+	if err != nil {
+		return err
+	}
+	logger.SetGlobal(
+		zapLogger.With(zap.String("component", "gateway")),
+	)
+
 	conn, err := grpc.Dial(":50051",
 		grpc.WithTransportCredentials(insecure.NewCredentials()),
 	)
@@ -45,6 +55,6 @@ func run(ctx context.Context, addr string) error {
 		return err
 	}
 
-	log.Printf("service gateway listening on %q", addr)
+	logger.Infof(ctx, "service gateway listening on %q", addr)
 	return server.Serve(lis)
 }

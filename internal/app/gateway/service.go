@@ -5,7 +5,9 @@ import (
 	"io"
 
 	pb "github.com/route256/workshop-8/pkg/gateway"
+	"github.com/route256/workshop-8/pkg/logger"
 	pb_messages "github.com/route256/workshop-8/pkg/messages"
+	"go.uber.org/zap"
 	"google.golang.org/protobuf/types/known/emptypb"
 )
 
@@ -87,6 +89,11 @@ func (i *Implementation) ExchangeMessages(ctx context.Context, req *pb.ExchangeM
 	if err != nil {
 		return nil, err
 	}
+
+	l := logger.FromContext(ctx)
+	ctx = logger.ToContext(ctx, l.With(zap.String("method", "exchange")))
+
+	logger.Infof(ctx, "this message has 'method' attr")
 
 	var resp pb.ExchangeMessagesResponse
 	var respErr error

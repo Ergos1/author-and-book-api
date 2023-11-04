@@ -9,6 +9,7 @@ import (
 
 	"google.golang.org/protobuf/types/known/emptypb"
 
+	"github.com/opentracing/opentracing-go"
 	pb "github.com/route256/workshop-8/pkg/messages"
 )
 
@@ -51,7 +52,12 @@ func (i *Implementation) PushMessages(stream pb.Messages_PushMessagesServer) err
 }
 
 func (i *Implementation) ExchangeMessages(stream pb.Messages_ExchangeMessagesServer) error {
+	span, ctx := opentracing.StartSpanFromContext(stream.Context(), "app: exchange")
+	defer span.Finish()
+
 	for {
+		span, ctx = opentracing.StartSpanFromContext(ctx, "app: exchange-recv")
+
 		message, err := stream.Recv()
 		if err != nil {
 			if err == io.EOF {
@@ -59,14 +65,20 @@ func (i *Implementation) ExchangeMessages(stream pb.Messages_ExchangeMessagesSer
 			}
 			return err
 		}
+		span.SetTag("key", "value")
+		span.LogKV("logkey", "logValue")
 
+		span.Finish()
+
+		span, ctx = opentracing.StartSpanFromContext(ctx, "app: exchange-send")
 		stream.Send(&pb.Message{
 			Ts:     time.Now().Format(time.RFC3339),
 			Text:   fmt.Sprintf("RE: %s", message.Text),
 			Author: "server",
 		})
+		span.Finish()
 
-		log.Printf("message %q from %s", message.Text, message.Author)
+		// logger.Infof(ctx, "message %q from %s", message.Text, message.Author)
 	}
 }
 
