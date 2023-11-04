@@ -4,11 +4,14 @@ import (
 	"context"
 	"flag"
 	"log"
+	"net"
 
 	pb "github.com/route256/workshop-8/pkg/gateway"
+	messages_pb "github.com/route256/workshop-8/pkg/messages"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
-	"google.golang.org/protobuf/types/known/emptypb"
+
+	impl "github.com/route256/workshop-8/internal/app/gateway"
 )
 
 func main() {
@@ -25,19 +28,23 @@ func main() {
 }
 
 func run(ctx context.Context, addr string) error {
-	conn, err := grpc.Dial(addr,
-		grpc.WithTransportCredentials(insecure.NewCredentials()))
+	conn, err := grpc.Dial(":50051",
+		grpc.WithTransportCredentials(insecure.NewCredentials()),
+	)
 	if err != nil {
 		return err
 	}
 
-	client := pb.NewGatewayClient(conn)
+	gw := impl.New(messages_pb.NewMessagesClient(conn))
 
-	summary, err := client.GetMessagesSummary(ctx, &emptypb.Empty{})
+	server := grpc.NewServer()
+	pb.RegisterGatewayServer(server, gw)
+
+	lis, err := net.Listen("tcp", addr)
 	if err != nil {
 		return err
 	}
 
-	log.Printf("count %d", summary.GetCount())
-	return nil
+	log.Printf("service gateway listening on %q", addr)
+	return server.Serve(lis)
 }

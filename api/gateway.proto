@@ -2,7 +2,7 @@ syntax = "proto3";
 
 import "google/protobuf/empty.proto";
 
-option go_package = "pkg/getaway";
+option go_package = "pkg/gateway";
 
 package gateway;
 
