@@ -1,0 +1,26 @@
+mode: set
+gitlab.ozon.dev/ergossteam/homework-3/internal/app/author/create_author.go:7.84,10.2 2 0
+gitlab.ozon.dev/ergossteam/homework-3/internal/app/author/delete_author.go:5.69,7.2 1 0
+gitlab.ozon.dev/ergossteam/homework-3/internal/app/author/dto.go:8.57,13.2 3 0
+gitlab.ozon.dev/ergossteam/homework-3/internal/app/author/dto.go:15.41,20.2 1 0
+gitlab.ozon.dev/ergossteam/homework-3/internal/app/author/dto.go:22.48,24.33 2 0
+gitlab.ozon.dev/ergossteam/homework-3/internal/app/author/dto.go:24.33,26.3 1 0
+gitlab.ozon.dev/ergossteam/homework-3/internal/app/author/dto.go:28.2,28.19 1 0
+gitlab.ozon.dev/ergossteam/homework-3/internal/app/author/get_author_by_id.go:5.81,7.16 2 0
+gitlab.ozon.dev/ergossteam/homework-3/internal/app/author/get_author_by_id.go:7.16,9.3 1 0
+gitlab.ozon.dev/ergossteam/homework-3/internal/app/author/get_author_by_id.go:11.2,13.20 3 0
+gitlab.ozon.dev/ergossteam/homework-3/internal/app/author/repository.go:24.53,28.2 1 1
+gitlab.ozon.dev/ergossteam/homework-3/internal/app/author/repository.go:30.93,33.57 3 0
+gitlab.ozon.dev/ergossteam/homework-3/internal/app/author/repository.go:33.57,35.3 1 0
+gitlab.ozon.dev/ergossteam/homework-3/internal/app/author/repository.go:37.2,37.16 1 0
+gitlab.ozon.dev/ergossteam/homework-3/internal/app/author/repository.go:40.85,43.35 3 1
+gitlab.ozon.dev/ergossteam/homework-3/internal/app/author/repository.go:43.35,45.3 1 0
+gitlab.ozon.dev/ergossteam/homework-3/internal/app/author/repository.go:47.2,47.21 1 1
+gitlab.ozon.dev/ergossteam/homework-3/internal/app/author/repository.go:50.94,52.29 2 0
+gitlab.ozon.dev/ergossteam/homework-3/internal/app/author/repository.go:52.29,54.3 1 0
+gitlab.ozon.dev/ergossteam/homework-3/internal/app/author/repository.go:56.2,56.12 1 0
+gitlab.ozon.dev/ergossteam/homework-3/internal/app/author/repository.go:59.70,61.29 2 0
+gitlab.ozon.dev/ergossteam/homework-3/internal/app/author/repository.go:61.29,63.3 1 0
+gitlab.ozon.dev/ergossteam/homework-3/internal/app/author/repository.go:65.2,65.12 1 0
+gitlab.ozon.dev/ergossteam/homework-3/internal/app/author/service.go:7.55,11.2 1 0
+gitlab.ozon.dev/ergossteam/homework-3/internal/app/author/update_author.go:5.85,8.2 2 0
