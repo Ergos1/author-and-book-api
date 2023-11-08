@@ -1,0 +1,52 @@
+syntax = "proto3";
+
+option go_package = "gitlab.ozon.dev/ergossteam/homework-3/pkg/api/grpc/v1/author;author";
+import "book.proto";
+
+package author;
+
+service AuthorService {
+    rpc GetByID(GetByIDRequest) returns (GetByIDResponse);
+    rpc Create(CreateRequest) returns (CreateReponse);
+    rpc Update(UpdateRequest) returns (UpdateResponse);
+    rpc Delete(DeleteRequest) returns (DeleteRequest);
+}
+
+message Author {
+    int64 id = 1;
+    string name = 2;
+    repeated book.Book books = 3;
+}
+
+message GetByIDRequest {
+    int64 id = 1;
+}
+
+message GetByIDResponse {
+    Author author = 1;
+}
+
+message CreateRequest {
+    int64 id = 1;
+    string name = 2;
+}
+
+message CreateReponse {
+    Author author = 1;
+}
+
+message UpdateRequest {
+    int64 id = 1;
+    string name = 2;
+}
+
+message UpdateResponse {
+    Author author = 1;
+}
+
+message DeleteRequest {
+    int64 id = 1;
+}
+
+message DeleteResponse {
+}

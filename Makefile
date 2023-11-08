@@ -47,3 +47,18 @@ test-integration:
 
 test-unit:
 	go test -v ./... -tags=unit
+
+
+GO_PB_PATH:="api/v1"
+AUTHOR_PB_PATH:="${GO_PB_PATH}/author.proto"
+BOOK_PB_PATH:="${GO_PB_PATH}/book.proto"
+
+GO_OUT_PB_PATH:="pkg/api/grpc/v1"
+AUTHOR_OUT_PB_PATH:="${GO_OUT_PB_PATH}/author"
+BOOK_OUT_PB_PATH:="${GO_OUT_PB_PATH}/book"
+
+protoc-generate:
+	mkdir -p ${AUTHOR_OUT_PB_PATH}
+	mkdir -p ${BOOK_OUT_PB_PATH}
+	protoc -I=${GO_PB_PATH}/. --proto_path=. --go_out=${BOOK_OUT_PB_PATH} --go_opt paths=source_relative --go-grpc_out=${BOOK_OUT_PB_PATH} --go-grpc_opt paths=source_relative ${BOOK_PB_PATH} 
+	protoc -I=${GO_PB_PATH}/. --proto_path=. --go_out=${AUTHOR_OUT_PB_PATH} --go_opt paths=source_relative --go-grpc_out=${AUTHOR_OUT_PB_PATH} --go-grpc_opt paths=source_relative ${AUTHOR_PB_PATH} 
