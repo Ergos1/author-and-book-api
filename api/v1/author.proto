@@ -9,7 +9,7 @@ service AuthorService {
     rpc GetByID(GetByIDRequest) returns (GetByIDResponse);
     rpc Create(CreateRequest) returns (CreateReponse);
     rpc Update(UpdateRequest) returns (UpdateResponse);
-    rpc Delete(DeleteRequest) returns (DeleteRequest);
+    rpc Delete(DeleteRequest) returns (DeleteResponse);
 }
 
 message Author {
@@ -32,7 +32,7 @@ message CreateRequest {
 }
 
 message CreateReponse {
-    Author author = 1;
+    int64 id = 1;
 }
 
 message UpdateRequest {
@@ -41,7 +41,6 @@ message UpdateRequest {
 }
 
 message UpdateResponse {
-    Author author = 1;
 }
 
 message DeleteRequest {

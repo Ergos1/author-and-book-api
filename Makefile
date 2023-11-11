@@ -15,6 +15,11 @@ ifeq ($(POSTGRES_URI_PLAIN),)
 	POSTGRES_URI_PLAIN := postgres://$(POSTGRES_USER):$(POSTGRES_PASSWORD)@$(POSTGRES_HOST):$(POSTGRES_PORT)/$(POSTGRES_DB)
 endif
 
+up-db:
+	docker-compose -f deployments/psql-db/docker-compose.yml up -d 
+down-db:
+	docker-compose -f deployments/psql-db/docker-compose.yml up -d 
+
 up-deps:
 	docker-compose -f deployments/psql-db/docker-compose.yml up -d 
 	docker-compose -f deployments/kafka/docker-compose.yml up -d 
@@ -23,7 +28,13 @@ down-deps:
 	docker-compose -f deployments/psql-db/docker-compose.yml up -d 
 	docker-compose -f deployments/kafka/docker-compose.yml up -d 
 
-run:
+run-grpc-client:
+	go run cmd/app_grpc_client/main.go $(ARGS)
+
+run-grpc-server:
+	go run cmd/app_grpc_server/main.go
+
+run-http:
 	go run cmd/app_http/main.go
 
 clear-db:
