@@ -34,6 +34,9 @@ run-grpc-client:
 run-grpc-server:
 	go run cmd/app_grpc_server/main.go
 
+run-grpc-gateway:
+	go run cmd/app_grpc_gateway/main.go
+
 run-http:
 	go run cmd/app_http/main.go
 
@@ -71,5 +74,5 @@ BOOK_OUT_PB_PATH:="${GO_OUT_PB_PATH}/book"
 protoc-generate:
 	mkdir -p ${AUTHOR_OUT_PB_PATH}
 	mkdir -p ${BOOK_OUT_PB_PATH}
-	protoc -I=${GO_PB_PATH}/. --proto_path=. --go_out=${BOOK_OUT_PB_PATH} --go_opt paths=source_relative --go-grpc_out=${BOOK_OUT_PB_PATH} --go-grpc_opt paths=source_relative ${BOOK_PB_PATH} 
-	protoc -I=${GO_PB_PATH}/. --proto_path=. --go_out=${AUTHOR_OUT_PB_PATH} --go_opt paths=source_relative --go-grpc_out=${AUTHOR_OUT_PB_PATH} --go-grpc_opt paths=source_relative ${AUTHOR_PB_PATH} 
+	protoc -I=${GO_PB_PATH}/. --proto_path=. --go_out=${BOOK_OUT_PB_PATH} --go_opt paths=source_relative --go-grpc_out=${BOOK_OUT_PB_PATH} --go-grpc_opt paths=source_relative --grpc-gateway_out=${BOOK_OUT_PB_PATH} --grpc-gateway_opt=paths=source_relative --grpc-gateway_opt=generate_unbound_methods=true ${BOOK_PB_PATH}
+	protoc -I=${GO_PB_PATH}/. --proto_path=. --go_out=${AUTHOR_OUT_PB_PATH} --go_opt paths=source_relative --go-grpc_out=${AUTHOR_OUT_PB_PATH} --go-grpc_opt paths=source_relative --grpc-gateway_out=${AUTHOR_OUT_PB_PATH} --grpc-gateway_opt=paths=source_relative --grpc-gateway_opt=generate_unbound_methods=true ${AUTHOR_PB_PATH}

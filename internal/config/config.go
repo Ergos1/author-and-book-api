@@ -39,7 +39,8 @@ func NewConfig() *Config {
 			Dbname:   getEnv("POSTGRES_DB", "test"),
 		},
 		Server: ServerConfig{
-			Address: getEnv("SERVER_ADDRESS", ":9000"),
+			Address:        getEnv("SERVER_ADDRESS", ":9000"),
+			GatewayAddress: getEnv("GATEWAY_ADDRESS", ":9001"),
 		},
 	}
 }

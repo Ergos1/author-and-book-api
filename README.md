@@ -28,6 +28,9 @@
 
 ``ARGS="-cmd=3 -id=1" make run-grpc-client``
 
+### :gem: GRPC_GATEWAY
+
+``make run-grpc-gateway``
 
 ### GRPC SERVER
 
@@ -68,12 +71,32 @@
 
 http://localhost:16686
 
-## Шаги
+## Шаги default
 
 1. make up-deps
 2. make run-grpc-server
 3. Возможности "make run-grpc-client"
 
+## Шаги :gem:
+
+1. make up-deps
+2. make run-grpc-gateway
+
+Создать автора:
+
+``curl -X POST -i http://localhost:9001/authors -d '{"id": 1, "name": "Yera"}'``
+
+Получить автора:
+
+``curl -X GET -i http://localhost:9001/authors/1``
+
+Обновить автора:
+
+``curl -X PUT -i http://localhost:9001/authors/1 -d '{"name": "Yera3"}'``
+
+Удалить автора:
+
+``curl -X DELETE -i http://localhost:9001/authors/1``
 
 
 ## Задание

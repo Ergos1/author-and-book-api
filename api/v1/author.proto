@@ -2,14 +2,34 @@ syntax = "proto3";
 
 option go_package = "gitlab.ozon.dev/ergossteam/homework-3/pkg/api/grpc/v1/author;author";
 import "book.proto";
+import "google/api/annotations.proto";
 
 package author;
 
 service AuthorService {
-    rpc GetByID(GetByIDRequest) returns (GetByIDResponse);
-    rpc Create(CreateRequest) returns (CreateReponse);
-    rpc Update(UpdateRequest) returns (UpdateResponse);
-    rpc Delete(DeleteRequest) returns (DeleteResponse);
+    rpc GetByID(GetByIDRequest) returns (GetByIDResponse) {
+        option (google.api.http) = {
+            get: "/authors/{id}"
+        };
+    }
+
+    rpc Create(CreateRequest) returns (CreateReponse) {
+        option (google.api.http) = {
+            post: "/authors"
+            body: "*"
+        };
+    }
+    rpc Update(UpdateRequest) returns (UpdateResponse) {
+        option (google.api.http) = {
+            patch: "/authors/{id}"
+            body: "*"
+        };
+    }
+    rpc Delete(DeleteRequest) returns (DeleteResponse) {
+        option (google.api.http) = {
+            delete: "/authors/{id}"
+        };
+    }
 }
 
 message Author {
