@@ -3,6 +3,7 @@ package grpc
 import (
 	"context"
 
+	"github.com/opentracing/opentracing-go"
 	"gitlab.ozon.dev/ergossteam/homework-3/internal/app/book"
 	"gitlab.ozon.dev/ergossteam/homework-3/internal/app/core"
 	author_pb "gitlab.ozon.dev/ergossteam/homework-3/pkg/api/grpc/v1/author"
@@ -58,6 +59,9 @@ func (i *Implementation) GetByID(ctx context.Context, req *author_pb.GetByIDRequ
 	l := logger.FromContext(ctx)
 	ctx = logger.ToContext(ctx, l.With(zap.String("component", "grpc_impl")))
 
+	span, ctx := opentracing.StartSpanFromContext(ctx, "author get by id")
+	defer span.Finish()
+
 	logger.Infof(ctx, "author get by id called")
 
 	author, err := i.service.GetAuthorById(ctx, req.Id)
@@ -75,6 +79,9 @@ func (i *Implementation) GetByID(ctx context.Context, req *author_pb.GetByIDRequ
 func (i *Implementation) Create(ctx context.Context, req *author_pb.CreateRequest) (*author_pb.CreateReponse, error) {
 	l := logger.FromContext(ctx)
 	ctx = logger.ToContext(ctx, l.With(zap.String("component", "grpc_impl")))
+
+	span, ctx := opentracing.StartSpanFromContext(ctx, "author create with id")
+	defer span.Finish()
 
 	logger.Infof(ctx, "author create with id called")
 
@@ -94,6 +101,9 @@ func (i *Implementation) Update(ctx context.Context, req *author_pb.UpdateReques
 	l := logger.FromContext(ctx)
 	ctx = logger.ToContext(ctx, l.With(zap.String("component", "grpc_impl")))
 
+	span, ctx := opentracing.StartSpanFromContext(ctx, "author update by id")
+	defer span.Finish()
+
 	logger.Infof(ctx, "author update by id called")
 
 	err := i.service.UpdateAuthor(ctx, core.UpdateAuthorRequest{ID: req.Id, Name: req.Name})
@@ -107,6 +117,9 @@ func (i *Implementation) Update(ctx context.Context, req *author_pb.UpdateReques
 func (i *Implementation) Delete(ctx context.Context, req *author_pb.DeleteRequest) (*author_pb.DeleteResponse, error) {
 	l := logger.FromContext(ctx)
 	ctx = logger.ToContext(ctx, l.With(zap.String("component", "grpc_impl")))
+
+	span, ctx := opentracing.StartSpanFromContext(ctx, "author delete by id")
+	defer span.Finish()
 
 	logger.Infof(ctx, "author delete by id called")
 

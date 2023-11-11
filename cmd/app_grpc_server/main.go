@@ -2,10 +2,14 @@ package main
 
 import (
 	"context"
+	"log"
 	"net"
 	"os"
 	"os/signal"
+	"time"
 
+	"github.com/opentracing/opentracing-go"
+	jaeger_config "github.com/uber/jaeger-client-go/config"
 	"gitlab.ozon.dev/ergossteam/homework-3/internal/app/author"
 	"gitlab.ozon.dev/ergossteam/homework-3/internal/app/book"
 	"gitlab.ozon.dev/ergossteam/homework-3/internal/app/core"
@@ -22,7 +26,8 @@ func main() {
 	ctx := context.Background()
 
 	if err := run(ctx); err != nil {
-		logger.Errorf(ctx, "%v", err)
+		log.Print(err)
+		// logger.Errorf(ctx, "%v", err)
 	}
 }
 
@@ -34,8 +39,27 @@ func run(ctx context.Context) error {
 	if err != nil {
 		return err
 	}
-	zapLogger = zapLogger.With(zap.String("component", "grpc_client"))
+	zapLogger = zapLogger.With(zap.String("component", "grpc_server"))
 	logger.SetGlobal(zapLogger)
+
+	jaeger_cfg := jaeger_config.Configuration{
+		ServiceName: "GRPC_SERVER",
+		Sampler: &jaeger_config.SamplerConfig{
+			Type:  "const",
+			Param: 1,
+		},
+		Reporter: &jaeger_config.ReporterConfig{
+			LogSpans:            false,
+			BufferFlushInterval: 1 * time.Second,
+		},
+	}
+	tracer, closer, err := jaeger_cfg.NewTracer()
+	if err != nil {
+		return err
+	}
+	defer closer.Close()
+
+	opentracing.SetGlobalTracer(tracer)
 
 	cfg := config.NewConfig()
 	db := psql.NewDB(ctx)

@@ -36,15 +36,21 @@
 ``make run-grpc-server``
 
 
-### DATABASE
+### DEPS
 
 Поднять базу данных:
 
-``make up-db``
+``make up-deps``
 
 Завершить базу данных:
 
-``make down-db``
+``make down-deps``
+
+### DATABASE
+
+Зайти в бд:
+
+``docker exec -it hw3-test-db psql -U test``
 
 Запустить миграции:
 
@@ -58,6 +64,17 @@
 
 ``make migration-status``
 
+## Jager
+
+http://localhost:16686
+
+## Шаги
+
+1. make up-deps
+2. make run-grpc-server
+3. Возможности "make run-grpc-client"
+
+
 
 ## Задание
 
@@ -68,3 +85,4 @@
 
 ## Дополнительно
 💎 Подключить gRPC-Gateway для обратной совместимости с REST
+

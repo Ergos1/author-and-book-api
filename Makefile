@@ -22,11 +22,11 @@ down-db:
 
 up-deps:
 	docker-compose -f deployments/psql-db/docker-compose.yml up -d 
-	docker-compose -f deployments/kafka/docker-compose.yml up -d 
+	docker-compose -f deployments/jager/docker-compose.yml up -d 
 
 down-deps:
 	docker-compose -f deployments/psql-db/docker-compose.yml up -d 
-	docker-compose -f deployments/kafka/docker-compose.yml up -d 
+	docker-compose -f deployments/jager/docker-compose.yml up -d 
 
 run-grpc-client:
 	go run cmd/app_grpc_client/main.go $(ARGS)
