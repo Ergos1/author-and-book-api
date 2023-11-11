@@ -7,6 +7,8 @@ import (
 	"gitlab.ozon.dev/ergossteam/homework-3/internal/app/core"
 	author_pb "gitlab.ozon.dev/ergossteam/homework-3/pkg/api/grpc/v1/author"
 	book_pb "gitlab.ozon.dev/ergossteam/homework-3/pkg/api/grpc/v1/book"
+	"gitlab.ozon.dev/ergossteam/homework-3/pkg/logger"
+	"go.uber.org/zap"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
@@ -53,6 +55,11 @@ func mapToPBAuthor(author *core.AuthorWithBooks) *author_pb.Author {
 }
 
 func (i *Implementation) GetByID(ctx context.Context, req *author_pb.GetByIDRequest) (*author_pb.GetByIDResponse, error) {
+	l := logger.FromContext(ctx)
+	ctx = logger.ToContext(ctx, l.With(zap.String("component", "grpc_impl")))
+
+	logger.Infof(ctx, "author get by id called")
+
 	author, err := i.service.GetAuthorById(ctx, req.Id)
 	if err != nil {
 		return nil, status.Errorf(codes.InvalidArgument, err.Error())
@@ -66,6 +73,11 @@ func (i *Implementation) GetByID(ctx context.Context, req *author_pb.GetByIDRequ
 }
 
 func (i *Implementation) Create(ctx context.Context, req *author_pb.CreateRequest) (*author_pb.CreateReponse, error) {
+	l := logger.FromContext(ctx)
+	ctx = logger.ToContext(ctx, l.With(zap.String("component", "grpc_impl")))
+
+	logger.Infof(ctx, "author create with id called")
+
 	createdAuthorID, err := i.service.CreateAuthor(ctx, core.CreateAuthorRequest{ID: req.Id, Name: req.Name})
 	if err != nil {
 		return nil, status.Errorf(codes.InvalidArgument, err.Error())
@@ -79,6 +91,11 @@ func (i *Implementation) Create(ctx context.Context, req *author_pb.CreateReques
 }
 
 func (i *Implementation) Update(ctx context.Context, req *author_pb.UpdateRequest) (*author_pb.UpdateResponse, error) {
+	l := logger.FromContext(ctx)
+	ctx = logger.ToContext(ctx, l.With(zap.String("component", "grpc_impl")))
+
+	logger.Infof(ctx, "author update by id called")
+
 	err := i.service.UpdateAuthor(ctx, core.UpdateAuthorRequest{ID: req.Id, Name: req.Name})
 	if err != nil {
 		return nil, status.Errorf(codes.InvalidArgument, err.Error())
@@ -88,6 +105,11 @@ func (i *Implementation) Update(ctx context.Context, req *author_pb.UpdateReques
 }
 
 func (i *Implementation) Delete(ctx context.Context, req *author_pb.DeleteRequest) (*author_pb.DeleteResponse, error) {
+	l := logger.FromContext(ctx)
+	ctx = logger.ToContext(ctx, l.With(zap.String("component", "grpc_impl")))
+
+	logger.Infof(ctx, "author delete by id called")
+
 	err := i.service.DeleteAuthorById(ctx, req.Id)
 	if err != nil {
 		return nil, status.Errorf(codes.InvalidArgument, err.Error())

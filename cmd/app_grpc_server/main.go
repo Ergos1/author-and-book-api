@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"log"
 	"net"
 	"os"
 	"os/signal"
@@ -14,6 +13,8 @@ import (
 	"gitlab.ozon.dev/ergossteam/homework-3/internal/infrastructure/db/psql"
 	impl "gitlab.ozon.dev/ergossteam/homework-3/internal/transport/grpc"
 	author_pb "gitlab.ozon.dev/ergossteam/homework-3/pkg/api/grpc/v1/author"
+	"gitlab.ozon.dev/ergossteam/homework-3/pkg/logger"
+	"go.uber.org/zap"
 	"google.golang.org/grpc"
 )
 
@@ -21,7 +22,7 @@ func main() {
 	ctx := context.Background()
 
 	if err := run(ctx); err != nil {
-		log.Fatal(err)
+		logger.Errorf(ctx, "%v", err)
 	}
 }
 
@@ -29,10 +30,17 @@ func run(ctx context.Context) error {
 	ctx, cancels := signal.NotifyContext(ctx, os.Interrupt)
 	defer cancels()
 
+	zapLogger, err := zap.NewProduction()
+	if err != nil {
+		return err
+	}
+	zapLogger = zapLogger.With(zap.String("component", "grpc_client"))
+	logger.SetGlobal(zapLogger)
+
 	cfg := config.NewConfig()
 	db := psql.NewDB(ctx)
 	if err := db.Connect(ctx, cfg.Database.Uri()); err != nil {
-		log.Fatal(err)
+		logger.Errorf(ctx, "%v", err)
 	}
 	defer db.Close(ctx)
 
